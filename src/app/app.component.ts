@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'userAdministration';
+
+  //https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyBbOy_KmsnyAmLdfvkrW9PjJZ4f3W3mjmI
+
+
+
 }
