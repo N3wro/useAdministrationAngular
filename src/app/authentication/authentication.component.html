@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<div *ngIf="!hasAccount">
+
   <form (ngSubmit)="onSubmit()" #userForm="ngForm">
     <div class="form-group">
       <label for="email">Email</label>
@@ -34,20 +34,19 @@
       </div>
     </div>
     <br>
-    <div>
+
       <button [disabled]="!userForm.valid"
               type="submit" class="btn-primary"
 
       >Sign
         {{hasAccount ? ' In' : ' Up'}}
       </button>
-      |
-      <button
-      (click)="hasAccount=!hasAccount"
-      > switch to {{hasAccount ? 'Sign In' : 'Sign Up'}}</button>
-    </div>
-  </form>
-</div>
 
+
+  </form>
+<br>
+<button
+  (click)="hasAccount=!hasAccount"
+> switch to {{hasAccount ? 'Sign Up' : 'Sign In'}}</button>
 <!--<div *ngIf="errorMessage.trim().length>0">{{errorMessage}}</div>-->
 <app-footer class="footer"></app-footer>

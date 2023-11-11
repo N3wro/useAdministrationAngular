@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, EventEmitter, Injectable, Output} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {UserModel} from "./domain/user.model";
-import {catchError, Observable, throwError, tap, BehaviorSubject} from "rxjs";
-import {AuthResponseDataInterface} from "./domain/authResponseData.interface";
+import {UserModel} from "../domain/user.model";
+import {catchError, Observable, throwError, tap, BehaviorSubject, ReplaySubject} from "rxjs";
+import {AuthResponseDataInterface} from "../domain/authResponseData.interface";
 import {Router} from "@angular/router";
 import {load} from "@angular-devkit/build-angular/src/utils/server-rendering/esm-in-memory-file-loader";
 
@@ -10,10 +10,10 @@ import {load} from "@angular-devkit/build-angular/src/utils/server-rendering/esm
 @Injectable({
   providedIn: 'root'
 })
-export class AuthenticationService {
+export class AuthenticationService{
 
   user = new BehaviorSubject<UserModel>(null)
-
+  private _hasLoaded: boolean = false;
   constructor(private http: HttpClient, private router: Router) {
 
   }
@@ -23,23 +23,7 @@ export class AuthenticationService {
   signUp(email, password): Observable<any> {
     return this.http
       .post<AuthResponseDataInterface>
-      ("https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBbOy_KmsnyAmLdfvkrW9PjJZ4f3W3mjmI"
-        ,
-        {
-          email: email,
-          password: password,
-          returnSecureToken: true
-        }
-      )
-      .pipe(catchError(this.handleError)
-      )
-
-  }
-
-  login(email, password): Observable<any> {
-    return this.http
-      .post<AuthResponseDataInterface>
-      ("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBbOy_KmsnyAmLdfvkrW9PjJZ4f3W3mjmI"
+      ("https://www.googleapis.com/identitytoolkit/v3/relyingparty/signupNewUser?key=AIzaSyBbOy_KmsnyAmLdfvkrW9PjJZ4f3W3mjmI"
         ,
         {
           email: email,
@@ -49,55 +33,97 @@ export class AuthenticationService {
       )
       .pipe(catchError(this.handleError),
         tap(resData => {
+          const user = new UserModel(
+            resData.localId,
+            resData.email,
+            true,
+            resData.idToken,
+            +resData.expiresIn
+          );
+          this.user.next(user);
+          localStorage.setItem('userData', JSON.stringify(user))
+          this.autoLogout(user.expiresIn)
+        })
+      )
+
+  }
+
+  login(email, password): Observable<any> {
+    return this.http
+      .post<AuthResponseDataInterface>
+      ("https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyBbOy_KmsnyAmLdfvkrW9PjJZ4f3W3mjmI"
+        ,
+        {
+          email: email,
+          password: password,
+          returnSecureToken: true
+        }
+      )
+      .pipe(
+        catchError(this.handleError),
+        tap(resData => {
             const user = new UserModel(
               resData.localId,
               resData.email,
-              resData.password,
               true,
               resData.idToken,
               +resData.expiresIn
             );
             this.user.next(user);
             localStorage.setItem('userData', JSON.stringify(user))
-            this.autoLogout(10000)
+            this.autoLogout(user.expiresIn)
           }
         )
       )
 
   }
 
-  private autoLogin() {
+  public autoLogin() {
    let  loadUser : {
-     id: number;
+     id: string;
      email: string;
-     password: string;
      registered: boolean;
      _token: string;
-     _tokenExpirationDate: Date;
+     _tokenExpirationDate: string;
     }
-
     loadUser = JSON.parse(localStorage.getItem('userData'));
-
-   if (!loadUser._token)
+    console.log(loadUser);
+   if (!loadUser)
    {
-     return;
+     return null;
    }
+    console.log(loadUser);
 
-   this.user.next(new UserModel(
-     loadUser.id,
+   const loadedUser = new UserModel(loadUser.id,
      loadUser.email,
-     loadUser.password,
      loadUser.registered,
      loadUser._token,
-     loadUser._tokenExpirationDate.getMilliseconds()- Date.now()
-   )) ;
+     +loadUser._tokenExpirationDate)
 
-   this.autoLogout(
-     loadUser._tokenExpirationDate.getMilliseconds()- Date.now())
+    if (loadedUser.token) {
 
+
+      this.user.next(loadedUser);
+      this.autoLogout(
+        new Date(loadUser._tokenExpirationDate).getTime() -
+        new Date().getTime())
+
+    }
+
+    return  this.user.asObservable();
   }
 
-  private logout() {
+
+  get hasLoaded(): boolean {
+    return this._hasLoaded;
+  }
+
+
+  set hasLoaded(value: boolean) {
+    this._hasLoaded = value;
+  }
+
+  logout() {
     this.user.next(null);
     localStorage.removeItem('userData')
     this.router.navigate(['../'])
@@ -111,7 +137,7 @@ export class AuthenticationService {
     this.tokenExpirationTimeout = setTimeout(() => {
       this.logout();
       alert("Your session has been expired")
-    }, expiresIn);
+    }, expiresIn*3600);
   }
 
   private handleError(errorResp: HttpErrorResponse) {
@@ -129,11 +155,5 @@ export class AuthenticationService {
     return throwError(() => new Error(errorMessage));
   }
 
-  getUserData() {
-    return this.user.asObservable();
-  }
 
-  getAuthorizationToken():string {
-    return this.user.getValue().refreshToken;
-  }
 }

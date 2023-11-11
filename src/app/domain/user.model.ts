@@ -1,7 +1,6 @@
 export class UserModel {
-  private _id: number;
+  private _id: string;
   private _email: string;
-  private _password:string;
   private _registered: boolean;
   private _refreshToken: string;
   private _expiresIn: number;
@@ -14,26 +13,18 @@ export class UserModel {
     this._email = value;
   }
 
-  get password(): string {
-    return this._password;
-  }
-
-  set password(value: string) {
-    this._password = value;
-  }
-
-  get id(): number {
+  get id(): string {
     return this._id;
   }
 
-  set id(value: number) {
+  set id(value: string) {
     this._id = value;
   }
 
- constructor(id: number, email: string, password: string, registered: boolean, refreshToken: string, expiresIn: number) {
+ constructor(id: string, email: string, registered: boolean, refreshToken: string, expiresIn: number) {
     this._id = id;
     this._email = email;
-    this._password = password;
+
     this._registered = registered;
     this._refreshToken = refreshToken;
     this._expiresIn = expiresIn;
@@ -61,5 +52,12 @@ export class UserModel {
 
   set expiresIn(value: number) {
     this._expiresIn = value;
+  }
+
+  get token() {
+    if (!this._expiresIn ||   new Date(this.expiresIn).getTime() < new Date().getTime()) {
+      return null;
+    }
+    return this._expiresIn;
   }
 }

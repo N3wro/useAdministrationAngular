@@ -26,7 +26,8 @@ import { HomePageComponent } from './home-page/home-page.component';
     NgbModule,
     FormsModule,
     HttpClientModule,
-    RoutingModule
+    RoutingModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

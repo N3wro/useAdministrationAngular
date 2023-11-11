@@ -2,4 +2,17 @@
 
 
 
-<h1> hello User! {{userData.id}}</h1>
+
+<!-- Listens for the finishedLoading event and then sets hasLoaded once its been fired -->
+
+
+  <div *ngIf="userData">
+    <ul>
+      <li *ngFor="let user of userData">
+        {{user.email}}
+      </li>
+    </ul>
+</div>
+<button (click)="onFetchUser()">fetch</button>
+<!-- Doesnt render the second component until hasLoaded has been set to true -->
+
