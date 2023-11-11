@@ -54,10 +54,11 @@ export class UserModel {
     this._expiresIn = value;
   }
 
-  get token() {
-    if (!this._expiresIn ||   new Date(this.expiresIn).getTime() < new Date().getTime()) {
+  public token() {
+
+    if (!this._expiresIn ) {
       return null;
     }
-    return this._expiresIn;
+    return this._refreshToken;
   }
 }

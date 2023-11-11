@@ -70,8 +70,9 @@ export class AuthenticationService{
               +resData.expiresIn
             );
             this.user.next(user);
+          this.autoLogout(user.expiresIn)
             localStorage.setItem('userData', JSON.stringify(user))
-            this.autoLogout(user.expiresIn)
+
           }
         )
       )

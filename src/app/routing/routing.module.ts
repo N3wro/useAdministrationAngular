@@ -3,13 +3,13 @@ import {inject, NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 
 
-import {AppComponent} from './app.component';
+import {AppComponent} from '../app.component';
 import {CanMatchFn, Route, RouterModule, Routes, UrlSegment} from "@angular/router";
-import {ErrorPageComponent} from "./error-page/error-page.component";
-import {HomePageComponent} from "./home-page/home-page.component";
-import {AuthenticationComponent} from "./authentication/authentication.component";
+import {ErrorPageComponent} from "../error-page/error-page.component";
+import {HomePageComponent} from "../home-page/home-page.component";
+import {AuthenticationComponent} from "../authentication/authentication.component";
 
-import {userResolver} from "./resolver/user-resolver";
+import {userResolver} from "../resolver/user-resolver";
 
 
 

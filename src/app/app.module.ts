@@ -8,9 +8,10 @@ import { FooterComponent } from './footer/footer.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthenticationComponent } from './authentication/authentication.component';
 import {FormsModule} from "@angular/forms";
-import {HttpClientModule} from "@angular/common/http";
-import {RoutingModule} from "./routing.module";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import {RoutingModule} from "./routing/routing.module";
 import { HomePageComponent } from './home-page/home-page.component';
+import {AuthInterceptor} from "./interceptor/auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -29,7 +30,14 @@ import { HomePageComponent } from './home-page/home-page.component';
     RoutingModule,
 
   ],
-  providers: [],
+  providers: [
+
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
