@@ -12,6 +12,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {RoutingModule} from "./routing/routing.module";
 import { HomePageComponent } from './home-page/home-page.component';
 import {AuthInterceptor} from "./interceptor/auth.interceptor";
+import { AdminHomePageComponent } from './admin-home-page/admin-home-page.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import {AuthInterceptor} from "./interceptor/auth.interceptor";
     HeaderComponent,
     FooterComponent,
     AuthenticationComponent,
-    HomePageComponent
+    HomePageComponent,
+    AdminHomePageComponent
   ],
   imports: [
     BrowserModule,

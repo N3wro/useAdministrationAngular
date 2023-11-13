@@ -12,36 +12,19 @@ import {Profile} from "../domain/profile.model";
   styleUrls: ['./home-page.component.css']
 })
 export class HomePageComponent implements OnInit,OnDestroy {
-  userData: Profile[];
+  userData: UserModel;
   private userSub: Subscription;
   constructor(public authService: AuthenticationService,
               public  userService:UserService) {
   }
 
   ngOnInit() {
-    this.userSub = this.userService
-      .profileChanged
-      .subscribe(
-        (user:Profile[]) => {
-        this.userData=user;
+    this.userSub = this.authService.user.subscribe( (result) =>
+      this.userData = result
+    )
 
-    });
-
-    this.userData = this.userService.users;
-    console.log(this.userData);
   }
 
-  onFetchUser() {
-   this.userService.fetchUser().subscribe(
-     response =>
-     {
-       console.log(response);
-       this.userData= response;
-     }
-
-   );
-   console.log(this.userData)
-  }
   ngOnDestroy() {
     this.userSub.unsubscribe();
   }

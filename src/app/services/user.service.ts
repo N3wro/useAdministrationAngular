@@ -28,13 +28,16 @@ export class UserService {
     this.profileChanged.next(this.users);
   }
 
-  onCreateUser(postData: PostUserInfoModel) {
+  public onCreateUser(postData: Profile) {
 
     return this._http
-      .post(
-        'https://httppracticeyeah-default-rtdb.europe-west1.firebasedatabase.app/haallo.json',
-        postData
-      )
+      .put(
+        'https://httppracticeyeah-default-rtdb.europe-west1.firebasedatabase.app/profile/' + postData.id + '.json',
+        {
+            email: postData.email
+
+        }
+      ).subscribe()
   }
 
   addProfile(profile: Profile) {
@@ -48,12 +51,12 @@ export class UserService {
 
     return this._http
       .get<any>(
-        'https://httppracticeyeah-default-rtdb.europe-west1.firebasedatabase.app/haallo/' + '.json'
+        'https://httppracticeyeah-default-rtdb.europe-west1.firebasedatabase.app/profile/' + '.json'
       )
       .pipe(
         map(responseData => {
 
-          const profiles:Profile[] =[];
+          const profiles: Profile[] = [];
           for (const key in responseData) {
             if (responseData.hasOwnProperty(key)) {
               this.addProfile(
@@ -61,15 +64,14 @@ export class UserService {
                   key,
                   responseData[key].email
                 ))
-                profiles.push(new  Profile(key,responseData[key].email))
+              profiles.push(new Profile(key, responseData[key].email))
             }
           }
 
           return profiles
         }),
         tap(responseData => {
-            // this.users(responseData);
-            // alert(responseData)
+
           }
         ),
       )

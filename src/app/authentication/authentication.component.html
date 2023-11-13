@@ -1,8 +1,13 @@
 <app-header></app-header>
 
 
+<div  class="row d-flex justify-content-center">
+<div *ngIf="errorMessage" class="alert alert-danger" style="width: 500px;">{{errorMessage}}</div>
+</div>
+<br>
   <form (ngSubmit)="onSubmit()" #userForm="ngForm">
-    <div class="form-group">
+    <div class="row d-flex justify-content-center">
+    <div class="form-group" style="width: 500px;">
       <label for="email">Email</label>
       <input type="email"
              id="email"
@@ -11,6 +16,7 @@
              ngModel
              email
              required
+
              #email="ngModel"
       >
       <div [hidden]="email.valid || email.pristine"
@@ -18,7 +24,10 @@
         invalid Email!
       </div>
     </div>
-    <div class="form-group">
+
+    </div>
+    <div  class="row d-flex justify-content-center">
+    <div class="form-group" style="width: 500px;">
       <label for="password">Password</label>
       <input type="password"
              id="password"
@@ -26,27 +35,31 @@
              class="form-control"
              ngModel
              required
+             minlength="8"
              #password="ngModel"
       >
       <div [hidden]="password.valid || password.pristine"
            class="alert alert-danger">
-        invalid Password!
+         Password must be at least 8 characters long
       </div>
     </div>
+    </div>
     <br>
-
+    <div class="text-center">
       <button [disabled]="!userForm.valid"
-              type="submit" class="btn-primary"
-
-      >Sign
+              type="submit" class="btn btn-primary"
+       style="background-color: black">Sign
         {{hasAccount ? ' In' : ' Up'}}
       </button>
-
+    </div>
 
   </form>
 <br>
-<button
+<div class="text-center">
+<button class="btn btn-primary" type="submit" style="background-color:black"
   (click)="hasAccount=!hasAccount"
-> switch to {{hasAccount ? 'Sign Up' : 'Sign In'}}</button>
-<!--<div *ngIf="errorMessage.trim().length>0">{{errorMessage}}</div>-->
+> {{!hasAccount ?   'Already haven an account? Sign In': 'No account? Sign Up'}}</button>
+</div>
+
+
 <app-footer class="footer"></app-footer>

@@ -10,18 +10,33 @@ import {HomePageComponent} from "../home-page/home-page.component";
 import {AuthenticationComponent} from "../authentication/authentication.component";
 
 import {userResolver} from "../resolver/user-resolver";
-
+import {authGuard} from "./auth.guard";
+import {adminAuthGuard} from "./adminAuth.guard";
+import {AdminHomePageComponent} from "../admin-home-page/admin-home-page.component";
 
 
 const appRoutes: Routes = [
-  {path: '',
-    component: AuthenticationComponent},
   {
-    path: 'home',
-    component: HomePageComponent,
+    path: '', redirectTo: "/auth", pathMatch: 'full'
+  },
+  {
+    path: 'auth',
+    component: AuthenticationComponent
+
+  },
+  {
+    path: 'dashboard',
+    canActivate: [adminAuthGuard],
+    component: AdminHomePageComponent,
     resolve: {userData: userResolver},
 
   },
+  {
+    path: 'home',
+    canActivate: [authGuard],
+    component: HomePageComponent,
+  },
+
 
   // {
   //   path: 'servers', canActivate: [AuthGuardService], component: ServersComponent, children: [

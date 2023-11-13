@@ -32,6 +32,9 @@ export class AuthenticationComponent {
   }
 
   onSubmit() {
+    if (!this.form.valid) {
+      return;
+    }
     let authObs: Observable<AuthResponseDataInterface>;
     if (this.hasAccount) {
       authObs = this.authenticationService.login(this.form.value.email,
@@ -40,64 +43,21 @@ export class AuthenticationComponent {
       authObs = this.authenticationService.signUp(
         this.form.value.email,
         this.form.value.password);
+
     }
 
     authObs.subscribe({
         next: (resData) => {
           console.log(resData);
 
-          this.router.navigate(['/home']);
+          //this.router.navigate(['/home']);
         },
         error: (errorMessage) => {
-          console.log(errorMessage);
-
+         this.errorMessage = errorMessage;
         }
       }
     );
     this.form.reset();
   }
-
-  // onRegister() {
-  //   this.user.email = this.form.value.email;
-  //   this.user.password = this.form.value.password;
-  //   console.log(this.user);
-  //   this.authenticationService.signUp(
-  //     this.user.email, this.user.password).subscribe({
-  //     next: (b) => {
-  //       console.log(b)
-  //       this.userService.onCreateUser({
-  //           id: b.id,
-  //           email: b.email
-  //         }
-  //       ).subscribe(value => console.log(value))
-  //       this.router.navigate(['/home'])
-  //     },
-  //     error: (a) => console.log(a),
-  //     complete: () => console.log()
-  //   })
-  // }
-  //
-  // onLogin() {
-  //   this.user.email = this.form.value.email
-  //   this.user.password = this.form.value.password
-  //   this.authenticationService.login(
-  //     this.user.email, this.user.password).subscribe(
-  //     {
-  //       next: (b) => {
-  //         console.log(b)
-  //         this.router.navigate(['/home'])
-  //         this.authenticationService.hasLoaded = true;
-  //       },
-  //       error: (a) => {
-  //         console.log(a)
-  //         this.errorMessage = a
-  //       }
-  //       ,
-  //       complete: () => console.log()
-  //
-  //     })
-  //
-  // }
-
 
 }
