@@ -15,7 +15,7 @@ export const adminAuthGuard = () => {
   const authService = inject(AuthenticationService)
   let isAuthenticated: boolean;
   let currentUserId: string
-  let allowedEmails:string[] = ["b1yesfTgz2bqo0deuwtSHJTuxNE3"];
+  let allowedEmails: string[] = ["Yv6IDUBBzFUiSCcw46OG9SCeZfR2"];
 
 
   authService.user.pipe(
@@ -29,7 +29,7 @@ export const adminAuthGuard = () => {
     })
   ).subscribe(value => {
       isAuthenticated = value.auth
-    currentUserId = value.id
+      currentUserId = value.id
     }
   );
 

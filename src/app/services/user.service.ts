@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {PostUserInfoModel} from "../domain/postUserInfo.model";
-import {map, Subject, tap} from "rxjs";
+import {forkJoin, map, Subject, tap} from "rxjs";
 import {Profile} from "../domain/profile.model";
 import {user} from "@angular/fire/auth";
 import {UserModel} from "../domain/user.model";
@@ -34,8 +34,8 @@ export class UserService {
       .put(
         'https://httppracticeyeah-default-rtdb.europe-west1.firebasedatabase.app/profile/' + postData.id + '.json',
         {
-            email: postData.email
-
+          email: postData.email,
+          idToken: postData.idToken
         }
       ).subscribe()
   }
@@ -62,9 +62,10 @@ export class UserService {
               this.addProfile(
                 new Profile(
                   key,
-                  responseData[key].email
+                  responseData[key].email,
+                  responseData[key].idToken
                 ))
-              profiles.push(new Profile(key, responseData[key].email))
+              profiles.push(new Profile(key, responseData[key].email, responseData.idToken))
             }
           }
 
@@ -75,6 +76,22 @@ export class UserService {
           }
         ),
       )
+  }
+
+  removeProfile(id: string) {
+
+    return this._http.delete(
+      'https://httppracticeyeah-default-rtdb.europe-west1.firebasedatabase.app/profile/' + id + '.json',
+    )
+
+  }
+
+  removeUserFromAuthentication(id: string) {
+    return this._http.post("https://identitytoolkit.googleapis.com/v1/accounts:delete?key=AIzaSyBbOy_KmsnyAmLdfvkrW9PjJZ4f3W3mjmI",
+      {
+        idToken:id
+      }
+    )
   }
 
 }

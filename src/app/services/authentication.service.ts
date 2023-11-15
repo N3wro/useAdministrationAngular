@@ -38,7 +38,8 @@ export class AuthenticationService {
       .pipe(catchError(this.handleError),
         tap(resData => {
           let profile = this.handleAuth(resData);
-          this.userService.onCreateUser(new Profile(profile.id, profile.email));
+          console.log(resData);
+          this.userService.onCreateUser(new Profile(resData.localId, resData.email, resData.idToken));
           this.isAdmin(resData).subscribe(
             {
               next: (resData) => {

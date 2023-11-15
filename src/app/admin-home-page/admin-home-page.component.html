@@ -1,5 +1,3 @@
-<p>admin-home-page works!</p>
-
 
 <app-header> </app-header>
 
@@ -7,13 +5,17 @@
 <!-- Listens for the finishedLoading event and then sets hasLoaded once its been fired -->
 
 
-<div *ngIf="userData">
-  <ul class="list-group">
-    <li *ngFor="let user of userData" class="list-group-item-action">
-      {{user.email}}
+<div *ngIf="userData" class="row d-flex justify-content-center">
+  <ul class="list-group" style="width: 500px;">
+    <li *ngFor="let user of userData | orderByEmail" class="list-group-item-action">
+
+      <span class="name">{{user.email}}</span>
+
     </li>
   </ul>
 </div>
-<button (click)="onFetchUser()">refresh</button>
+<div class="text-center">
+<button (click)="onFetchUser()" class="btn btn-dark">refresh</button>
+</div>
 <!-- Doesnt render the second component until hasLoaded has been set to true -->
 

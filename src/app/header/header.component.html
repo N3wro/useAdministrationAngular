@@ -1,16 +1,38 @@
-
 <nav class="navbar navbar-expand-lg bg-black">
   <div class="container-fluid ">
     <a class="navbar-brand"
        style="color: azure"
     >User-Administration</a>
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav" href="#" >
+<!--    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">-->
+<!--      <div class="navbar-nav" href="#">-->
 
-        <a  *ngIf="isAuthenticated" class="nav-link" (click)="onLogout()" href="#"
-           style="color: azure; text-align: right;" >Logout</a>
-      </div>
+<!--        <a *ngIf="isAuthenticated" class="nav-link" (click)="onLogout()" href="/auth"-->
+<!--           style="color: azure; text-align: right;">Logout</a>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown"-->
+<!--            aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--      <span class="navbar-toggler-icon"></span>-->
+<!--    </button>-->
+
+<!--    <a class="navbar-brand" href="#">Navbar</a>-->
+<!--    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown"-->
+<!--            aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--      <span class="navbar-toggler-icon"></span>-->
+<!--    </button>-->
+
+    <div *ngIf="isAuthenticated" class="nav-item dropdown" ngbDropdown style="position: absolute; margin-left: 300px;" >
+      <a class="nav-link dropdown-toggle" id="navbarScrollingDropdown" role="button" ngbDropdownToggle style="color: azure">
+        Settings
+      </a>
+      <ul class="dropdown-menu dropdown-menu-dark dropdown-" ngbDropdownMenu aria-labelledby="navbarScrollingDropdown">
+        <li ngbDropdownItem><a class="dropdown-item" (click)="onLogout()">Logout</a></li>
+        <li ngbDropdownItem><a class="dropdown-item" (click)="removeUser()">Delete</a></li>
+      </ul>
     </div>
+
+
+
   </div>
 </nav>
 

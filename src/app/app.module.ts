@@ -13,6 +13,7 @@ import {RoutingModule} from "./routing/routing.module";
 import { HomePageComponent } from './home-page/home-page.component';
 import {AuthInterceptor} from "./interceptor/auth.interceptor";
 import { AdminHomePageComponent } from './admin-home-page/admin-home-page.component';
+import { OrderByEmailPipe } from './custom-pipes/order-by-email.pipe';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { AdminHomePageComponent } from './admin-home-page/admin-home-page.compon
     FooterComponent,
     AuthenticationComponent,
     HomePageComponent,
-    AdminHomePageComponent
+    AdminHomePageComponent,
+    OrderByEmailPipe
   ],
   imports: [
     BrowserModule,

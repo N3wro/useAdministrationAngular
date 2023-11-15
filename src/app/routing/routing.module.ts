@@ -37,14 +37,6 @@ const appRoutes: Routes = [
     component: HomePageComponent,
   },
 
-
-  // {
-  //   path: 'servers', canActivate: [AuthGuardService], component: ServersComponent, children: [
-  //     {path: ':id', component: ServerComponent},
-  //     {path: ':id/edit', component: EditServerComponent}
-  //   ]
-  //
-  // },
   {
     path: 'error', component: ErrorPageComponent,
 
