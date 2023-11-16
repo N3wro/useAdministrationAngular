@@ -27,15 +27,7 @@ export class AdminHomePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.userSub = this.userService
-    //   .profileChanged
-    //   .subscribe(
-    //     (users:Profile[]) => {
-    //       this.userData=users;
-    //
-    //     });
 
-    // this.userData = this.userService.users;
 
     this.userData = this.route.snapshot.data['userData'];
     this.success.wasSuccessful = false;

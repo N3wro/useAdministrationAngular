@@ -16,7 +16,7 @@ import {take} from "rxjs/operators";
 export class AuthenticationService {
 
   user = new BehaviorSubject<UserModel>(null)
-  private _hasLoaded: boolean = false;
+  private _hasAdminRole: boolean = false;
 
   constructor(private http: HttpClient, private router: Router, private userService: UserService) {
 
@@ -77,8 +77,8 @@ export class AuthenticationService {
             this.isAdmin(resData).subscribe(
               {
                 next: (resData) => {
-
-                  resData ? this.router.navigate(['/dashboard']) : this.router.navigate(['/home'])
+                  this.hasAdminRole=resData;
+                  this.hasAdminRole ? this.router.navigate(['/dashboard']) : this.router.navigate(['/home'])
 
                 },
                 error: (errorMessage) => {
@@ -139,7 +139,7 @@ export class AuthenticationService {
     return this.user.asObservable();
   }
 
-  private isAdmin(resData: any) {
+  public isAdmin(resData: any) {
 
 
     return this.http.get<{ email: string }>
@@ -148,7 +148,8 @@ export class AuthenticationService {
         take(1),
         map(
           (resData) => {
-            return resData.email != null;
+            alert(JSON.stringify(resData))
+            return resData.email!=null;
           }
         ),
         catchError(err => {
@@ -207,4 +208,11 @@ export class AuthenticationService {
   }
 
 
+  get hasAdminRole(): boolean {
+    return this._hasAdminRole;
+  }
+
+  set hasAdminRole(value: boolean) {
+    this._hasAdminRole = value;
+  }
 }

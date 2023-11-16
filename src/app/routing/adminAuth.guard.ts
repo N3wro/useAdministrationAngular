@@ -1,41 +1,46 @@
 import {
   ActivatedRouteSnapshot, CanActivateFn,
   ResolveFn,
-  Route, Router, RouterStateSnapshot
+  Route, Router, RouterStateSnapshot, UrlTree
 } from '@angular/router';
 import {inject, Injectable} from '@angular/core';
-import {Observable, switchAll} from 'rxjs';
+import {Observable, of, switchAll, switchMap} from 'rxjs';
 import {map, tap, take} from 'rxjs/operators';
 import {UserService} from "../services/user.service";
 import {AuthenticationService} from "../services/authentication.service";
+import {UserModel} from "../domain/user.model";
+import {resolve} from "@angular/compiler-cli";
 
 
 export const adminAuthGuard = () => {
   const router = inject(Router);
   const authService = inject(AuthenticationService)
+
   let isAuthenticated: boolean;
-  let currentUserId: string
-  let allowedEmails: string[] = ["Yv6IDUBBzFUiSCcw46OG9SCeZfR2"];
+  let currentUser: any;
 
 
   authService.user.pipe(
     take(1),
     map(user => {
       if (!user) {
-        return {id: "", auth: false}
+        return {auth: false}
       } else {
-        return {id: user.id, auth: true}
+        return {user: user, auth: true}
       }
     })
   ).subscribe(value => {
+
       isAuthenticated = value.auth
-      currentUserId = value.id
+      if (isAuthenticated)
+        currentUser = value.user;
     }
   );
 
   if (!isAuthenticated)
-    return router.createUrlTree(['/auth'])
+    return router.createUrlTree(['/auth']);
 
 
-  return allowedEmails.includes(currentUserId) ? true : router.createUrlTree(['/auth']);
+  return authService.hasAdminRole? true :  router.createUrlTree(['/home']);
 }
+
