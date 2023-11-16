@@ -16,7 +16,7 @@ import {take} from "rxjs/operators";
 export class AuthenticationService {
 
   user = new BehaviorSubject<UserModel>(null)
-  private _hasAdminRole: boolean = false;
+  private _hasAdminRole: boolean = undefined;
 
   constructor(private http: HttpClient, private router: Router, private userService: UserService) {
 
@@ -78,11 +78,13 @@ export class AuthenticationService {
               {
                 next: (resData) => {
                   this.hasAdminRole=resData;
+                  localStorage.setItem('isAdmin', JSON.stringify(true));
                   this.hasAdminRole ? this.router.navigate(['/dashboard']) : this.router.navigate(['/home'])
 
                 },
                 error: (errorMessage) => {
-
+                  this.hasAdminRole=false;
+                  localStorage.setItem('isAdmin', JSON.stringify(false));
                   this.router.navigate(['/home'])
                 }
               }
@@ -105,6 +107,7 @@ export class AuthenticationService {
     this.user.next(user);
     this.autoLogout(+user.expiresIn * 1000)
     localStorage.setItem('userData', JSON.stringify(user))
+
     return user;
   }
 
@@ -148,7 +151,6 @@ export class AuthenticationService {
         take(1),
         map(
           (resData) => {
-            alert(JSON.stringify(resData))
             return resData.email!=null;
           }
         ),
@@ -209,6 +211,12 @@ export class AuthenticationService {
 
 
   get hasAdminRole(): boolean {
+
+    if (this._hasAdminRole===undefined)
+    {
+
+    }
+
     return this._hasAdminRole;
   }
 

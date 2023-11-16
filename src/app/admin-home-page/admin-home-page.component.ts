@@ -30,6 +30,8 @@ export class AdminHomePageComponent implements OnInit, OnDestroy {
 
 
     this.userData = this.route.snapshot.data['userData'];
+
+    this.userData = this.userData.filter((item) => item.id!=this.authService.user.value.id )
     this.success.wasSuccessful = false;
     this.success.message="";
   }
@@ -37,34 +39,17 @@ export class AdminHomePageComponent implements OnInit, OnDestroy {
   onFetchUser() {
     this.userService.fetchUser().subscribe(
       response => {
-        console.log(response);
-        this.userData = response;
+
+        this.userData = response.filter((item) => item.id!=this.authService.user.value.id );
       }
     );
-    console.log(this.userData)
+
   }
 
   ngOnDestroy() {
     //this.userSub.unsubscribe();
   }
 
-  removeUser(user : Profile) {
-    forkJoin({
-      requestOne: this.userService.removeUserFromAuthentication(user.idToken),
-      requestTwo: this.userService.removeProfile(user.id),
 
-    })
-      .subscribe({
-        next: (resData) => {
-          this.success.wasSuccessful=true;
-          this.success.message='removed successfully';
-
-        },
-        error: (errorMessage) => {
-          this.success.wasSuccessful=false;
-          this.success.message=errorMessage.message;
-        }
-      });
-  }
 
 }

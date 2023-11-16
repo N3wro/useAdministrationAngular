@@ -1,7 +1,7 @@
 export class UserModel {
   private _id: string;
   private _email: string;
-  private _registered: boolean;
+  private _isAdmin: boolean;
   private _refreshToken: string;
   private _expiresIn: number;
 
@@ -21,10 +21,10 @@ export class UserModel {
     this._id = value;
   }
 
- constructor(id: string, email: string, registered: boolean, refreshToken: string, expiresIn: number) {
+ constructor(id: string, email: string, isAdmin: boolean, refreshToken: string, expiresIn: number) {
     this._id = id;
     this._email = email;
-    this._registered = registered;
+    this._isAdmin = isAdmin;
     this._refreshToken = refreshToken;
     this._expiresIn = expiresIn;
   }

@@ -41,6 +41,13 @@ export const adminAuthGuard = () => {
     return router.createUrlTree(['/auth']);
 
 
+
+   let loadUser = JSON.parse(localStorage.getItem('isAdmin'));
+
+  if (loadUser) {
+    return true;
+  }
+
   return authService.hasAdminRole? true :  router.createUrlTree(['/home']);
 }
 
